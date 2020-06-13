@@ -7,7 +7,6 @@ var budgetController = (function () {
 var UIController = (function () {
 
     // Private
-
     var DOMstrings = {
 
         // Input class names
@@ -42,6 +41,7 @@ var UIController = (function () {
 
         getDOMstrings: function () {
 
+            // Exporting input class names
             return DOMstrings;
 
         }
@@ -54,13 +54,29 @@ var UIController = (function () {
 
 var appController = (function (budgetCtrl, UICtrl) {
 
-    var DOM = UICtrl.getDOMstrings();
+    var setupEventListeners = function () {
+
+        // Importing input class names
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+
+        document.addEventListener('keypress', function (event) {
+
+            if (event.keyCode === 13 || event.which === 13) {
+
+                ctrlAddItem();
+
+            }
+
+        });
+
+    };
 
     var ctrlAddItem = function () {
 
         // 1. Get data from the input field
         var input = UICtrl.getInput();
-        console.log(input);
 
         // 2. Add the item to the budgetController
 
@@ -74,16 +90,22 @@ var appController = (function (budgetCtrl, UICtrl) {
 
     };
 
-    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
+    // Public
+    return {
 
-    document.addEventListener('keypress', function (event) {
+        // Initialization function
+        init: function () {
 
-        if (event.keyCode === 13 || event.which === 13) {
+            // test
+            console.log('The app has been initialized.');
 
-            ctrlAddItem();
+            // Setting up the Event Listeners
+            setupEventListeners();
 
         }
 
-    });
+    };
 
 })(budgetController, UIController);
+
+appController.init();
