@@ -1,8 +1,48 @@
 var budgetController = (function () {
 
-    // Some code
+    // Fucnction Constructor for the Expense type objects
+    var Expense = function (id, description, value) {
+
+        this.id = id;
+        this.description = description;
+        this.value = value;
+
+    };
+
+    // Fucnction Constructor for the Income type objects
+    var Income = function (id, description, value) {
+
+        this.id = id;
+        this.description = description;
+        this.value = value;
+
+    };
+
+    // Data structure
+    var data = {
+
+        allItems: {
+            // Arrays for the Expense and Income type objects
+            exp: [],
+            inc: []
+        },
+
+        totals: {
+            exp: 0,
+            inc: 0
+        }
+
+    };
 
 })();
+
+var Expense = function (id, description, value) {
+
+    this.id = id;
+    this.description = description;
+    this.value = value;
+
+};
 
 var UIController = (function () {
 
@@ -85,8 +125,6 @@ var appController = (function (budgetCtrl, UICtrl) {
         // 4. Calculate the budget
 
         // 5. Display the budget on the UI
-
-        console.log('Hi');
 
     };
 
