@@ -1,5 +1,7 @@
 var budgetController = (function () {
 
+    // Private properties and methods
+
     // Fucnction Constructor for the Expense type objects
     var Expense = function (id, description, value) {
 
@@ -34,19 +36,57 @@ var budgetController = (function () {
 
     };
 
+    // Public properties and methods
+
+    return {
+
+        addItem: function (type, desc, val) {
+
+            var newItem, ID;
+
+            // Checking if exp or inc arrays are empty
+            if (data.allItems[type].length > 0) {
+
+                // Creating ID for a new object based on the length of the array + 1
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+
+            } else {
+                ID = 0;
+            }
+
+            // Create new item based on type argument
+            if (type === 'exp') {
+
+                // Instantiating new Expense object
+                newItem = new Expense(ID, desc, val);
+
+            } else if (type === 'inc') {
+
+                // Instantiating new Income object
+                newItem = new Income(ID, desc, val);
+
+            }
+
+            // Adding new item based on type at the end of the array
+            data.allItems[type].push(newItem);
+
+            // Returning the new item
+            return newItem;
+
+        },
+
+        testingDataStructure: function () {
+            console.log(data);
+        }
+
+    };
+
 })();
-
-var Expense = function (id, description, value) {
-
-    this.id = id;
-    this.description = description;
-    this.value = value;
-
-};
 
 var UIController = (function () {
 
-    // Private
+    // Private properties and methods
+
     var DOMstrings = {
 
         // Input class names
@@ -59,7 +99,8 @@ var UIController = (function () {
 
     };
 
-    // Public
+    // Public properties and methods
+
     return {
 
         getInput: function () {
@@ -94,6 +135,8 @@ var UIController = (function () {
 
 var appController = (function (budgetCtrl, UICtrl) {
 
+    // Private properties and methods
+
     var setupEventListeners = function () {
 
         // Importing input class names
@@ -115,10 +158,14 @@ var appController = (function (budgetCtrl, UICtrl) {
 
     var ctrlAddItem = function () {
 
+        // Variables
+        var input, newItem;
+
         // 1. Get data from the input field
-        var input = UICtrl.getInput();
+        input = UICtrl.getInput();
 
         // 2. Add the item to the budgetController
+        newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
         // 3. Addd the to the UI
 
@@ -128,7 +175,8 @@ var appController = (function (budgetCtrl, UICtrl) {
 
     };
 
-    // Public
+    // Public properties and methods
+
     return {
 
         // Initialization function
