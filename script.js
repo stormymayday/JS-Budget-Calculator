@@ -159,7 +159,10 @@ var UIController = (function () {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expensesLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+
+        // Event Delegation container
+        container: '.container'
 
     };
 
@@ -199,12 +202,12 @@ var UIController = (function () {
             if (type === 'inc') {
 
                 element = DOMstrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
             } else if (type === 'exp') {
 
                 element = DOMstrings.expensesContainer;
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage"></div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage"></div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 
             }
 
@@ -267,11 +270,13 @@ var appController = (function (budgetCtrl, UICtrl) {
 
     var setupEventListeners = function () {
 
-        // Importing input class names
+        // Importing DOMstrings object containing CSS class names
         var DOM = UICtrl.getDOMstrings();
 
+        // Adding the 'add item' event listener to the input button
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
+        // Adding the 'add item' event listener to the 'enter' keypress
         document.addEventListener('keypress', function (event) {
 
             if (event.keyCode === 13 || event.which === 13) {
@@ -281,6 +286,9 @@ var appController = (function (budgetCtrl, UICtrl) {
             }
 
         });
+
+        // Adding the 'delete item' event listener to the Income and Expenses list buttons using the Event Delegation technique
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
     };
 
@@ -319,6 +327,33 @@ var appController = (function (budgetCtrl, UICtrl) {
 
             // 5. Calculating and updating the budget
             updateBudget();
+
+        }
+
+    };
+
+    var ctrlDeleteItem = function (event) {
+
+        var itemID, splitTypeAndID, type, ID;
+
+        // Getting id attribute of the target's fourth parent via the DOM traversal
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+        if (itemID) {
+
+            // Splitting the string into an arry
+            splitTypeAndID = itemID.split('-');
+
+            type = splitTypeAndID[0];
+            ID = splitTypeAndID[1];
+
+            console.log(type, ID);
+
+            // 1. Deleting an item from the data structure
+
+            // 2. Deleting an item from the UI
+
+            // 3. Updating and displaying new budget value
 
         }
 
