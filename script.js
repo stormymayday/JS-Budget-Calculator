@@ -156,6 +156,28 @@ var UIController = (function () {
             // 3. Inserting HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 
+        },
+
+        clearFields: function () {
+
+            var fields, fieldsArray;
+
+            // Creating a List
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
+
+            // Converting List into an Array
+            fieldsArray = Array.prototype.slice.call(fields);
+
+            fieldsArray.forEach(function (current, index, array) {
+
+                // Clearing contents of an input field 
+                current.value = "";
+
+            });
+
+            // Setting the focus on the first input field (description)
+            fieldsArray[0].focus();
+
         }
 
     };
@@ -198,6 +220,9 @@ var appController = (function (budgetCtrl, UICtrl) {
 
         // 3. Addd the to the UI
         UICtrl.addListItem(newItem, input.type);
+
+        // 4. Clear the input fields
+        UICtrl.clearFields();
 
         // 4. Calculate the budget
 
