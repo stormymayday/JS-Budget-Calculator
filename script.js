@@ -197,7 +197,7 @@ var budgetController = (function () {
             console.log(data);
         }
 
-    };
+    }; // end of return
 
 })();
 
@@ -230,6 +230,43 @@ var UIController = (function () {
 
         // Expenses Percentage Label
         expensesPercLabel: '.item__percentage'
+
+    };
+
+    var formatNumber = function (num, type) {
+
+        var absVal, fixedNum, splitNum, int, dec, sign;
+
+        /*  Rules:
+        *   '+' sign before the 'income' type.
+        *   '-' sign before the 'expense' type.
+        *   Exactly 2 decimal points.
+        *   Comma separating the thousands.
+        *   Example: 2432.4263 -> + 2,432.43
+        */
+
+        // 1. Getting the absolute value of the number.
+        absVal = Math.abs(num);
+
+        // 2. Setting 2 decimal points.
+        fixedNum = absVal.toFixed(2);
+
+        // 3. Adding a comma to separate the thousands.
+        splitNum = fixedNum.split('.');
+        int = splitNum[0];
+        dec = splitNum[1];
+
+        if (int.length > 3) {
+
+            int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, 3);
+
+        }
+
+        // 4. Choosing the '+' or '-' sign based on type argument
+        type === 'exp' ? sign = '-' : sign = '+';
+
+        // 5. Returning the result
+        return sign + ' ' + int + '.' + dec;
 
     };
 
@@ -281,7 +318,7 @@ var UIController = (function () {
             // 2. Replacing placeholder text with data from the object
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%', obj.description);
-            newHtml = newHtml.replace('%value%', obj.value);
+            newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
             // 3. Inserting HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
@@ -324,9 +361,12 @@ var UIController = (function () {
 
         displayBudget: function (obj) {
 
-            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
-            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
-            document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+            var type;
+            obj.budget >= 0 ? type = 'inc' : type = 'exp';
+
+            document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+            document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
+            document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
             if (obj.percentage > 0) {
 
@@ -337,6 +377,7 @@ var UIController = (function () {
                 document.querySelector(DOMstrings.percentageLabel).textContent = '---';
 
             }
+
         },
 
         displayPercentages: function (percentages) {
@@ -371,7 +412,7 @@ var UIController = (function () {
 
         }
 
-    };
+    }; // end of return
 
 })();
 
@@ -512,7 +553,7 @@ var appController = (function (budgetCtrl, UICtrl) {
 
         }
 
-    };
+    }; // end of return
 
 })(budgetController, UIController);
 
