@@ -273,6 +273,17 @@ var UIController = (function () {
 
     };
 
+    // Custom forEach method for NodeLists
+    var nodeListForEach = function (nodeList, callback) {
+
+        for (var i = 0; i < nodeList.length; i++) {
+
+            callback(nodeList[i], i);
+
+        }
+
+    };
+
     // Public properties and methods
 
     return {
@@ -388,17 +399,7 @@ var UIController = (function () {
             // Node List
             var fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-            // Custom forEach method for NodeLists
-            var nodeListForEach = function (nodeList, callback) {
-
-                for (var i = 0; i < nodeList.length; i++) {
-
-                    callback(nodeList[i], i);
-
-                }
-
-            };
-
+            // Callback function for nodeListForEachMethod
             nodeListForEach(fields, function (current, index) {
 
                 if (percentages[index] > 0) {
@@ -407,7 +408,7 @@ var UIController = (function () {
 
                 } else {
 
-                    current.textContent = percentages[index] + '---';
+                    current.textContent = '---';
 
                 }
 
@@ -427,6 +428,27 @@ var UIController = (function () {
             month = currentDate.getMonth();
 
             document.querySelector(DOMstrings.dateLabel).textContent = arrMonths[month] + ' ' + year;
+        },
+
+        changeType: function () {
+
+            // Creating a NodeList
+            var fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue
+            );
+
+            // Callback function that toggles css class on the input fields
+            nodeListForEach(fields, function (cur) {
+
+                cur.classList.toggle('red-focus');
+
+            });
+
+            // Toggling css class on the input button
+            document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
+
         }
 
     }; // end of return
@@ -458,6 +480,9 @@ var appController = (function (budgetCtrl, UICtrl) {
 
         // Adding the 'delete item' event listener to the Income and Expenses list buttons using the Event Delegation technique
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
+        // Changing border input fields and button based on selected type (exp or inc)
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changeType);
 
     };
 
